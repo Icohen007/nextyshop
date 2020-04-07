@@ -1,8 +1,15 @@
 import axios from 'axios';
+import ProductReview from '../components/Product/ProductReview';
+import ProductActions from '../components/Product/ProductActions';
 
 function Product({ product }) {
   console.log({ product });
-  return <>product</>;
+  return (
+    <>
+      <ProductReview {...product} />
+      <ProductActions {...product} />
+    </>
+  );
 }
 
 Product.getInitialProps = async ({ query: { _id } }) => {
