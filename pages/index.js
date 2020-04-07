@@ -1,9 +1,10 @@
 import React from 'react';
 import axios from 'axios';
 import ProductList from '../components/Index/ProductList';
+import baseUrl from '../utils/baseUrl';
 
 const getProducts = async () => {
-  const url = 'http://localhost:3000/api/products';
+  const url = `${baseUrl}/api/products`;
   const products = await axios.get(url);
   return { products: products.data };
 };
