@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import ProductList from '../components/Index/ProductList';
 
 const getProducts = async () => {
   const url = 'http://localhost:3000/api/products';
@@ -8,8 +9,7 @@ const getProducts = async () => {
 };
 
 function Home({ products }) {
-  console.log(products);
-  return <>home</>;
+  return <ProductList products={products} />;
 }
 
 Home.getInitialProps = getProducts;

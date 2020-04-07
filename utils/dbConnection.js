@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 const connectionStatus = { isConnected: false };
 
+
 const mongooseDeprecatedConfig = {
     useCreateIndex: true,
     useNewUrlParser: true,
