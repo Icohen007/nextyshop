@@ -1,35 +1,107 @@
 import React from 'react';
 import {
-  Form, Input, TextArea, Button, Image, Message, Header, Icon,
+  Button, Form, Header, Icon, Image, Input, Message, TextArea,
 } from 'semantic-ui-react';
+import axios from 'axios';
+import baseUrl from '../utils/baseUrl';
 
-const INITIAL_PRODUCT = {
+const initialState = {
   name: '',
   price: '',
   media: '',
   description: '',
+  success: false,
+  loading: false,
 };
 
-function CreateProduct() {
-  const [product, setProduct] = React.useState(INITIAL_PRODUCT);
-  const [mediaPreview, setMediaPreview] = React.useState('');
-  const [success, setSuccess] = React.useState(false);
+const ActionTypes = {
+  CHANGE_NAME: 'CHANGE_NAME',
+  CHANGE_PRICE: 'CHANGE_PRICE',
+  CHANGE_MEDIA: 'CHANGE_MEDIA',
+  CHANGE_DESCRIPTION: 'CHANGE_DESCRIPTION',
+  SUCCESS: 'SUCCESS',
+  LOADING: 'LOADING',
+  ERROR: 'ERROR',
+};
 
-  function handleChange(event) {
+function reducer(state, action) {
+  switch (action.type) {
+    case ActionTypes.CHANGE_NAME:
+      return { ...state, name: action.payload };
+    case ActionTypes.CHANGE_PRICE:
+      return { ...state, price: action.payload };
+    case ActionTypes.CHANGE_MEDIA:
+      return { ...state, media: action.payload };
+    case ActionTypes.CHANGE_DESCRIPTION:
+      return { ...state, description: action.payload };
+    case ActionTypes.SUCCESS:
+      return { ...initialState, success: true };
+    case ActionTypes.LOADING:
+      return { ...state, loading: true };
+    case ActionTypes.ERROR:
+      return { ...state, loading: false };
+    default:
+      throw new Error();
+  }
+}
+
+function CreateProduct() {
+  const [{
+    name, price, media, description, success, loading,
+  }, dispatch] = React.useReducer(reducer, initialState);
+  const [mediaPreview, setMediaPreview] = React.useState('');
+
+  const handleChange = (event) => {
     const { name, value, files } = event.target;
     if (name === 'media') {
-      setProduct((prevState) => ({ ...prevState, media: files[0] }));
-      setMediaPreview(window.URL.createObjectURL(files[0]));
+      const uploadedFile = files[0];
+      dispatch({ type: ActionTypes.CHANGE_MEDIA, payload: uploadedFile });
+      setMediaPreview(window.URL.createObjectURL(uploadedFile));
+      event.target.value = null;
     } else {
-      setProduct((prevState) => ({ ...prevState, [name]: value }));
+      dispatch({ type: `CHANGE_${name.toUpperCase()}`, payload: value });
+    }
+  };
+
+  async function handleImageUpload() {
+    try {
+      const UPLOAD_PRESET = 'nextShop';
+      const data = new FormData();
+      data.append('file', media);
+      data.append('upload_preset', UPLOAD_PRESET);
+      data.append('cloud_name', process.env.CLOUDINARY_CLOUD_NAME);
+      const response = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`, data);
+      return response.data.url;
+    } catch (err) {
+      dispatch({ type: ActionTypes.ERROR });
     }
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    console.log(product);
-    setProduct(INITIAL_PRODUCT);
-    setSuccess(true);
+    dispatch({ type: ActionTypes.LOADING });
+    let mediaUrl;
+    try {
+      mediaUrl = await handleImageUpload();
+    } catch (err) {
+      dispatch({ type: ActionTypes.ERROR });
+      return;
+    }
+    console.log({ mediaUrl });
+    const newProduct = {
+      name, price, description, mediaUrl,
+    };
+    const url = `${baseUrl}/api/product`;
+    try {
+      const response = await axios.post(url, newProduct);
+      console.log({ response });
+      dispatch({ type: ActionTypes.SUCCESS });
+      setMediaPreview('');
+    } catch (e) {
+      dispatch({ type: ActionTypes.ERROR });
+      console.log(e);
+      console.log(e.message);
+    }
   }
 
   return (
@@ -38,7 +110,7 @@ function CreateProduct() {
         <Icon name="add" color="orange" />
         Create New Product
       </Header>
-      <Form success={success} onSubmit={handleSubmit}>
+      <Form loading={loading} success={success} onSubmit={handleSubmit}>
         <Message
           success
           icon="check"
@@ -51,7 +123,7 @@ function CreateProduct() {
             name="name"
             label="Name"
             placeholder="Name"
-            value={product.name}
+            value={name}
             onChange={handleChange}
           />
           <Form.Field
@@ -62,7 +134,7 @@ function CreateProduct() {
             min="0.00"
             step="0.01"
             type="number"
-            value={product.price}
+            value={price}
             onChange={handleChange}
           />
           <Form.Field
@@ -82,10 +154,11 @@ function CreateProduct() {
           label="Description"
           placeholder="Description"
           onChange={handleChange}
-          value={product.description}
+          value={description}
         />
         <Form.Field
           control={Button}
+          disabled={loading}
           color="blue"
           icon="pencil alternate"
           content="Submit"

@@ -24,7 +24,7 @@ function Header() {
             NextShop
           </Menu.Item>
         </Link>
-        <HeaderLink title="Cart" iconName="edge" linkTo="/cart" isActive={isActive} />
+        <HeaderLink title="Cart" iconName="cart" linkTo="/cart" isActive={isActive} />
         { user && <HeaderLink title="Create" iconName="add" linkTo="/create" isActive={isActive} /> }
         { user
           ? (
