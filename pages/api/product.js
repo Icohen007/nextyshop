@@ -14,13 +14,22 @@ async function handlePostRequest(req, res) {
   const {
     name, price, description, mediaUrl,
   } = req.body;
+  let insertedProduct;
+
   if (!name || !price || !description || !mediaUrl) {
     res.status(422).send('Product missing one or more fields');
     return;
   }
-  const insertedProduct = await new Product({
-    name, price, description, mediaUrl,
-  }).save();
+
+  try {
+    insertedProduct = await new Product({
+      name, price, description, mediaUrl,
+    }).save();
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Server Error in creating product');
+  }
+
   res.status(201).json(insertedProduct);
 }
 

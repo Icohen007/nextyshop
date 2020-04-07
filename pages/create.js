@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import {
   Button, Form, Header, Icon, Image, Input, Message, TextArea,
 } from 'semantic-ui-react';
 import axios from 'axios';
+
 import baseUrl from '../utils/baseUrl';
+import errorHandler from '../utils/errorHandler';
 
 const initialState = {
   name: '',
   price: '',
   media: '',
   description: '',
+  error: '',
   success: false,
   loading: false,
 };
@@ -39,7 +42,7 @@ function reducer(state, action) {
     case ActionTypes.LOADING:
       return { ...state, loading: true };
     case ActionTypes.ERROR:
-      return { ...state, loading: false };
+      return { ...state, loading: false, error: action.payload };
     default:
       throw new Error();
   }
@@ -47,9 +50,16 @@ function reducer(state, action) {
 
 function CreateProduct() {
   const [{
-    name, price, media, description, success, loading,
-  }, dispatch] = React.useReducer(reducer, initialState);
-  const [mediaPreview, setMediaPreview] = React.useState('');
+    name, price, media, description, error, success, loading,
+  }, dispatch] = useReducer(reducer, initialState);
+  const [mediaPreview, setMediaPreview] = useState('');
+  const [disabled, setDisabled] = useState(true);
+
+  useEffect(() => {
+    const requiredFields = [name, price, media, description];
+    const requiredFieldsFilled = requiredFields.every(Boolean);
+    setDisabled(!requiredFieldsFilled);
+  }, [name, price, media, description]);
 
   const handleChange = (event) => {
     const { name, value, files } = event.target;
@@ -77,6 +87,10 @@ function CreateProduct() {
     }
   }
 
+  const displayError = (err) => {
+    dispatch({ type: ActionTypes.ERROR, payload: err });
+  };
+
   async function handleSubmit(event) {
     event.preventDefault();
     dispatch({ type: ActionTypes.LOADING });
@@ -84,7 +98,7 @@ function CreateProduct() {
     try {
       mediaUrl = await handleImageUpload();
     } catch (err) {
-      dispatch({ type: ActionTypes.ERROR });
+      errorHandler(err, displayError);
       return;
     }
     console.log({ mediaUrl });
@@ -97,10 +111,8 @@ function CreateProduct() {
       console.log({ response });
       dispatch({ type: ActionTypes.SUCCESS });
       setMediaPreview('');
-    } catch (e) {
-      dispatch({ type: ActionTypes.ERROR });
-      console.log(e);
-      console.log(e.message);
+    } catch (err) {
+      errorHandler(err, displayError);
     }
   }
 
@@ -110,7 +122,9 @@ function CreateProduct() {
         <Icon name="add" color="orange" />
         Create New Product
       </Header>
-      <Form loading={loading} success={success} onSubmit={handleSubmit}>
+      <Form loading={loading} error={Boolean(error)} success={success} onSubmit={handleSubmit}>
+        <Message error header="Oops!" content={error} />
+
         <Message
           success
           icon="check"
@@ -158,7 +172,7 @@ function CreateProduct() {
         />
         <Form.Field
           control={Button}
-          disabled={loading}
+          disabled={disabled || loading}
           color="blue"
           icon="pencil alternate"
           content="Submit"
