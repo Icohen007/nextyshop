@@ -7,7 +7,7 @@ const getProducts = async () => {
     return { products: products.data };
 };
 
-function Home({ websites: products }) {
+function Home({ products }) {
     console.log(products);
     return <>home</>;
 }
