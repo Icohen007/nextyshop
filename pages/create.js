@@ -94,21 +94,13 @@ function CreateProduct() {
   async function handleSubmit(event) {
     event.preventDefault();
     dispatch({ type: ActionTypes.LOADING });
-    let mediaUrl;
     try {
-      mediaUrl = await handleImageUpload();
-    } catch (err) {
-      errorHandler(err, displayError);
-      return;
-    }
-    console.log({ mediaUrl });
-    const newProduct = {
-      name, price, description, mediaUrl,
-    };
-    const url = `${baseUrl}/api/product`;
-    try {
-      const response = await axios.post(url, newProduct);
-      console.log({ response });
+      const mediaUrl = await handleImageUpload();
+      const newProduct = {
+        name, price, description, mediaUrl,
+      };
+      const url = `${baseUrl}/api/product`;
+      await axios.post(url, newProduct);
       dispatch({ type: ActionTypes.SUCCESS });
       setMediaPreview('');
     } catch (err) {
