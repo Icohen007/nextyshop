@@ -3,7 +3,11 @@ import {
   Button, Form, Icon, Message, Segment,
 } from 'semantic-ui-react';
 import Link from 'next/link';
+import axios from 'axios';
+import baseUrl from '../utils/baseUrl';
 import errorHandler from '../utils/errorHandler';
+import { handleLogin } from '../utils/auth';
+
 
 const initialState = {
   name: '',
@@ -64,8 +68,9 @@ function Signup() {
     dispatch({ type: ActionTypes.LOADING });
     const newUser = { name, email, password };
     try {
-      console.log(newUser);
-      // make request to signup user
+      const url = `${baseUrl}/api/signup`;
+      const response = await axios.post(url, newUser);
+      handleLogin(response.data);
     } catch (err) {
       errorHandler(err, displayError);
     }
