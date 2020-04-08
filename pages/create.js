@@ -40,7 +40,7 @@ function reducer(state, action) {
     case ActionTypes.SUCCESS:
       return { ...initialState, success: true };
     case ActionTypes.LOADING:
-      return { ...state, loading: true };
+      return { ...state, loading: true, error: '' };
     case ActionTypes.ERROR:
       return { ...state, loading: false, error: action.payload };
     default:
@@ -62,29 +62,25 @@ function CreateProduct() {
   }, [name, price, media, description]);
 
   const handleChange = (event) => {
-    const { name, value, files } = event.target;
-    if (name === 'media') {
+    const { name: eventName, value, files } = event.target;
+    if (eventName === 'media') {
       const uploadedFile = files[0];
       dispatch({ type: ActionTypes.CHANGE_MEDIA, payload: uploadedFile });
       setMediaPreview(window.URL.createObjectURL(uploadedFile));
       event.target.value = null;
     } else {
-      dispatch({ type: `CHANGE_${name.toUpperCase()}`, payload: value });
+      dispatch({ type: `CHANGE_${eventName.toUpperCase()}`, payload: value });
     }
   };
 
   async function handleImageUpload() {
-    try {
-      const UPLOAD_PRESET = 'nextShop';
-      const data = new FormData();
-      data.append('file', media);
-      data.append('upload_preset', UPLOAD_PRESET);
-      data.append('cloud_name', process.env.CLOUDINARY_CLOUD_NAME);
-      const response = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`, data);
-      return response.data.url;
-    } catch (err) {
-      dispatch({ type: ActionTypes.ERROR });
-    }
+    const UPLOAD_PRESET = 'nextShop';
+    const data = new FormData();
+    data.append('file', media);
+    data.append('upload_preset', UPLOAD_PRESET);
+    data.append('cloud_name', process.env.CLOUDINARY_CLOUD_NAME);
+    const response = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`, data);
+    return response.data.url;
   }
 
   const displayError = (err) => {

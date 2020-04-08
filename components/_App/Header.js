@@ -8,7 +8,7 @@ import { IsActiveContext } from './RouterConfig';
 
 
 function Header() {
-  const user = true;
+  const user = false;
   const isActive = useContext(IsActiveContext);
 
   return (
