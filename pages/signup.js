@@ -117,19 +117,21 @@ function Signup() {
           />
           <Button
             disabled={disabled || loading}
-            icon="signup"
+            icon="sign in"
             type="submit"
             color="orange"
-            content="Signup"
+            content="Login"
           />
         </Segment>
       </Form>
       <Message attached="bottom" warning>
         <Icon name="help" />
         Existing user?
+        {' '}
         <Link href="/login">
           <a>Log in here</a>
         </Link>
+        {' '}
         instead.
       </Message>
     </>
