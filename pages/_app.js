@@ -1,6 +1,7 @@
 import App from 'next/app';
 import axios from 'axios';
 import { destroyCookie, parseCookies } from 'nookies';
+import Router from 'next/router';
 import Layout from '../components/_App/Layout';
 import { isRootOrAdmin, redirectUser } from '../utils/auth';
 import baseUrl from '../utils/baseUrl';
@@ -43,6 +44,20 @@ class MyApp extends App {
 
     return { pageProps };
   }
+
+  componentDidMount() {
+    window.addEventListener('storage', this.syncLogout);
+  }
+
+  componentWillUnmount() {
+      window.removeEventListener('storage', this.syncLogout);
+  }
+
+  syncLogout = (event) => {
+      if(event.key === 'logout') {
+          Router.push('/login');
+      }
+  };
 
   render() {
     const { Component, pageProps } = this.props;

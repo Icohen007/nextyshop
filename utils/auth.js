@@ -6,6 +6,12 @@ export function handleLogin(token) {
   Router.push('/account');
 }
 
+export function handleLogout() {
+  cookie.remove('token');
+  window.localStorage.setItem('logout', Date.now());
+  Router.push('/login');
+}
+
 export function redirectUser(ctx, location) {
   if (ctx.req) { // if wer'e on the server
     ctx.res.writeHead(302, { Location: location }); // redirect with native node.js

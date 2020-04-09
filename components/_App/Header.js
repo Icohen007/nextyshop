@@ -5,8 +5,7 @@ import { useContext } from 'react';
 import Link from 'next/link';
 import HeaderLink from './HeaderLink';
 import { IsActiveContext } from './RouterConfig';
-import { isRootOrAdmin } from '../../utils/auth';
-
+import { handleLogout, isRootOrAdmin } from '../../utils/auth';
 
 function Header({ user }) {
   const isActive = useContext(IsActiveContext);
@@ -30,7 +29,7 @@ function Header({ user }) {
           ? (
             <>
               <HeaderLink title="Account" iconName="user" linkTo="/account" isActive={isActive} />
-              <Menu.Item header>
+              <Menu.Item onClick={handleLogout} header>
                 <Icon
                   name="sign out"
                   size="large"
