@@ -7,8 +7,7 @@ import HeaderLink from './HeaderLink';
 import { IsActiveContext } from './RouterConfig';
 
 
-function Header() {
-  const user = false;
+function Header({ user }) {
   const isActive = useContext(IsActiveContext);
 
   return (
