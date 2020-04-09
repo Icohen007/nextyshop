@@ -3,7 +3,11 @@ import {
   Button, Form, Icon, Message, Segment,
 } from 'semantic-ui-react';
 import Link from 'next/link';
+import axios from 'axios';
 import errorHandler from '../utils/errorHandler';
+import baseUrl from '../utils/baseUrl';
+import { handleLogin } from '../utils/auth';
+
 
 const initialState = {
   email: '',
@@ -58,10 +62,11 @@ function Login() {
   async function handleSubmit(event) {
     event.preventDefault();
     dispatch({ type: ActionTypes.LOADING });
-    const newUser = { email, password };
+    const loginUser = { email, password };
     try {
-      console.log(newUser);
-      // make request to signup user
+      const url = `${baseUrl}/api/login`;
+      const response = await axios.post(url, loginUser);
+      handleLogin(response.data);
     } catch (err) {
       errorHandler(err, displayError);
     }
