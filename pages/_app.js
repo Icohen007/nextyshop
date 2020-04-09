@@ -2,7 +2,7 @@ import App from 'next/app';
 import axios from 'axios';
 import { destroyCookie, parseCookies } from 'nookies';
 import Layout from '../components/_App/Layout';
-import { redirectUser } from '../utils/auth';
+import { isRootOrAdmin, redirectUser } from '../utils/auth';
 import baseUrl from '../utils/baseUrl';
 
 const protectedRoutes = ['/account', '/create'];
@@ -28,9 +28,14 @@ class MyApp extends App {
         const response = await axios.get(url, payload);
         const user = response.data;
         pageProps.user = user;
+        const isNotPermitted = !isRootOrAdmin(user) && ctx.pathname === '/create';
+        if (isNotPermitted) {
+          redirectUser(ctx, '/');
+        }
       } catch (error) {
         if (error.response.status === 403) {
           destroyCookie(ctx, 'token');
+          redirectUser(ctx, '/login');
         }
         console.error('Error getting current user', error.message);
       }

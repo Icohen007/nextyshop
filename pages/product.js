@@ -3,12 +3,12 @@ import ProductReview from '../components/Product/ProductReview';
 import ProductActions from '../components/Product/ProductActions';
 import baseUrl from '../utils/baseUrl';
 
-function Product({ product }) {
+function Product({ product, user }) {
   console.log({ product });
   return (
     <>
       <ProductReview {...product} />
-      <ProductActions {...product} />
+      <ProductActions {...product} user={user} />
     </>
   );
 }

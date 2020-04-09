@@ -5,6 +5,7 @@ import { useContext } from 'react';
 import Link from 'next/link';
 import HeaderLink from './HeaderLink';
 import { IsActiveContext } from './RouterConfig';
+import { isRootOrAdmin } from '../../utils/auth';
 
 
 function Header({ user }) {
@@ -24,7 +25,7 @@ function Header({ user }) {
           </Menu.Item>
         </Link>
         <HeaderLink title="Cart" iconName="cart" linkTo="/cart" isActive={isActive} />
-        { user && <HeaderLink title="Create" iconName="add" linkTo="/create" isActive={isActive} /> }
+        { isRootOrAdmin(user) && <HeaderLink title="Create" iconName="add" linkTo="/create" isActive={isActive} /> }
         { user
           ? (
             <>
