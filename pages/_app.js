@@ -9,6 +9,20 @@ import baseUrl from '../utils/baseUrl';
 const protectedRoutes = ['/account', '/create'];
 
 class MyApp extends App {
+  componentDidMount() {
+    window.addEventListener('storage', this.syncLogout);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('storage', this.syncLogout);
+  }
+
+  syncLogout(event) {
+    if (event.key === 'logout') {
+      Router.push('/login');
+    }
+  }
+
   static async getInitialProps({ Component, ctx }) {
     const { token } = parseCookies(ctx);
 
@@ -24,17 +38,15 @@ class MyApp extends App {
       }
     } else {
       try {
-        const payload = { headers: { Authorization: token } };
-        const url = `${baseUrl}/api/account`;
-        const response = await axios.get(url, payload);
-        const user = response.data;
+        const user = await this.fetchUserByToken(token);
         pageProps.user = user;
         const isNotPermitted = !isRootOrAdmin(user) && ctx.pathname === '/create';
         if (isNotPermitted) {
           redirectUser(ctx, '/');
         }
       } catch (error) {
-        if (error.response.status === 403) {
+        const isTokenInvalid = error.response.status === 403;
+        if (isTokenInvalid) {
           destroyCookie(ctx, 'token');
           redirectUser(ctx, '/login');
         }
@@ -45,19 +57,12 @@ class MyApp extends App {
     return { pageProps };
   }
 
-  componentDidMount() {
-    window.addEventListener('storage', this.syncLogout);
+  static async fetchUserByToken(token) {
+    const payload = { headers: { Authorization: token } };
+    const url = `${baseUrl}/api/account`;
+    const response = await axios.get(url, payload);
+    return response.data;
   }
-
-  componentWillUnmount() {
-      window.removeEventListener('storage', this.syncLogout);
-  }
-
-  syncLogout = (event) => {
-      if(event.key === 'logout') {
-          Router.push('/login');
-      }
-  };
 
   render() {
     const { Component, pageProps } = this.props;
