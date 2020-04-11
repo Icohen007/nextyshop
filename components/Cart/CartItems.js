@@ -49,8 +49,4 @@ function CartItems({ products, user }) {
   return <Item.Group divided items={mapCartProductsToItems(products)} />;
 }
 
-CartItems.defaultProps = {
-  products: [],
-};
-
 export default CartItems;
