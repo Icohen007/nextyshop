@@ -3,7 +3,7 @@ import {
 } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
 
-function CartItems({ products, user }) {
+function CartItems({ products, user, handleRemoveFromCart }) {
   const router = useRouter();
 
   function mapCartProductsToItems(cartProducts) {
@@ -22,7 +22,7 @@ function CartItems({ products, user }) {
           basic
           icon="remove"
           floated="right"
-          onClick={() => console.log(product._id)}
+          onClick={() => handleRemoveFromCart(product._id)}
         />
       ),
     }));
