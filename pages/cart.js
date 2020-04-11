@@ -19,11 +19,13 @@ function Cart({ products, user }) {
     setCartProducts(response.data);
   }
 
+  async function handleCheckout() {}
+
   console.log(products);
   return (
     <Segment>
       <CartItems handleRemoveFromCart={handleRemoveFromCart} products={cartProducts} user={user} />
-      <CartSummary products={cartProducts} />
+      <CartSummary products={cartProducts} handleCheckout={handleCheckout} />
     </Segment>
   );
 }
