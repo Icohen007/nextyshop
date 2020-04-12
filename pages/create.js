@@ -48,6 +48,8 @@ function reducer(state, action) {
   }
 }
 
+let inputTarget = null;
+
 function CreateProduct() {
   const [{
     name, price, media, description, error, success, loading,
@@ -67,7 +69,7 @@ function CreateProduct() {
       const uploadedFile = files[0];
       dispatch({ type: ActionTypes.CHANGE_MEDIA, payload: uploadedFile });
       setMediaPreview(window.URL.createObjectURL(uploadedFile));
-      event.target.value = null;
+      inputTarget = event.target;
     } else {
       dispatch({ type: `CHANGE_${eventName.toUpperCase()}`, payload: value });
     }
@@ -99,6 +101,7 @@ function CreateProduct() {
       await axios.post(url, newProduct);
       dispatch({ type: ActionTypes.SUCCESS });
       setMediaPreview('');
+      inputTarget.value = null;
     } catch (err) {
       errorHandler(err, displayError);
     }
