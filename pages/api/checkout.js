@@ -9,6 +9,19 @@ import dbConnection from '../../utils/dbConnection';
 dbConnection();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
+async function getPrevCustomerOrCreate({ email, id }) {
+  const prevCustomer = await stripe.customers.list({ email, limit: 1 });
+  const isExistingCustomer = prevCustomer.data.length > 0;
+
+  if (isExistingCustomer) {
+    return prevCustomer.data[0].id;
+  }
+
+  const newCustomer = await stripe.customers.create({ email, source: id });
+  return newCustomer.id;
+}
+
+
 export default async (req, res) => {
   const { paymentData } = req.body;
   const { authorization } = req.headers;
@@ -20,24 +33,10 @@ export default async (req, res) => {
       model: 'Product',
     });
 
-    const { cartTotal, stripeTotal } = calculateCartTotal(cart.products);
-    const prevCustomer = await stripe.customers.list(
-      {
-        email: paymentData.email,
-        limit: 1,
-      },
-    );
-    const isExistingCustomer = prevCustomer.data.length > 0;
+    const customer = await getPrevCustomerOrCreate(paymentData);
 
-    let newCustomer;
-    if (!isExistingCustomer) {
-      newCustomer = await stripe.customers.create({
-        email: paymentData.email,
-        source: paymentData.id,
-      });
-    }
-    const customer = (isExistingCustomer && prevCustomer.data[0].id) || newCustomer.id;
-    const charge = await stripe.charges.create(
+    const { cartTotal, stripeTotal } = calculateCartTotal(cart.products);
+    await stripe.charges.create(
       {
         currency: 'usd',
         amount: stripeTotal,
@@ -49,6 +48,7 @@ export default async (req, res) => {
         idempotency_key: uuidv4(),
       },
     );
+
     await new Order({
       user: userId,
       email: paymentData.email,
