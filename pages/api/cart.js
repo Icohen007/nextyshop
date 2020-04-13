@@ -57,8 +57,9 @@ async function handlePutRequest(req, res) {
     return;
   }
   try {
-    const { quantity, productId } = req.body;
     const { userId } = jwt.verify(authorization, process.env.JWT_SECRET);
+
+    const { quantity, productId } = req.body;
     await updateCart(productId, userId, quantity);
     res.status(200).send('Cart Updated');
   } catch (error) {

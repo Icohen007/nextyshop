@@ -108,10 +108,10 @@ function Login() {
           />
           <Button
             disabled={disabled || loading}
-            icon="signup"
+            icon="sign in"
             type="submit"
-            color="orange"
-            content="Signup"
+            color="blue"
+            content="Login"
           />
         </Segment>
       </Form>

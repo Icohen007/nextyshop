@@ -5,6 +5,7 @@ import {
 } from 'semantic-ui-react';
 import cookie from 'js-cookie';
 import baseUrl from '../../utils/baseUrl';
+import useDidMountEffect from '../../hooks/useDidMountEffect';
 
 const tableHeaders = ['', 'Name', 'Email', 'Joined', 'Updated', 'Role'];
 
@@ -33,8 +34,8 @@ function AccountPermissions() {
         <Table.Header>
           <Table.Row>
             {tableHeaders.map((header) => (header
-              ? (<Table.HeaderCell>{header}</Table.HeaderCell>)
-              : <Table.HeaderCell />))}
+              ? (<Table.HeaderCell key={`${header}rand`}>{header}</Table.HeaderCell>)
+              : <Table.HeaderCell key={`${header}rand`} />))}
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -47,18 +48,33 @@ function AccountPermissions() {
 
 function UserPermissionRow({ user }) {
   const {
-    createdAt, updatedAt, role, email, name,
+    _id, createdAt, updatedAt, role, email, name,
   } = user;
+
+  const [admin, setAdmin] = useState(role === 'admin');
+
+  const handleToggleChange = (event, { checked }) => { setAdmin(checked); };
+
+  async function updatePermission() {
+    const url = `${baseUrl}/api/account`;
+    const payload = { userId: _id, role: admin ? 'admin' : 'user' };
+    await axios.put(url, payload);
+  }
+
+  useDidMountEffect(() => {
+    updatePermission();
+  }, [admin]);
+
   return (
     <Table.Row>
       <Table.Cell collapsing>
-        <Checkbox toggle />
+        <Checkbox toggle checked={admin} onChange={handleToggleChange} />
       </Table.Cell>
       <Table.Cell>{name}</Table.Cell>
       <Table.Cell>{email}</Table.Cell>
       <Table.Cell>{createdAt}</Table.Cell>
       <Table.Cell>{updatedAt}</Table.Cell>
-      <Table.Cell>{role}</Table.Cell>
+      <Table.Cell>{admin ? 'admin' : 'user'}</Table.Cell>
     </Table.Row>
   );
 }

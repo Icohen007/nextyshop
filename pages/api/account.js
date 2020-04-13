@@ -1,10 +1,11 @@
 import jwt from 'jsonwebtoken';
 import User from '../../models/User';
 import dbConnection from '../../utils/dbConnection';
+import handleRequest from '../../utils/apiUtils';
 
 dbConnection();
 
-export default async (req, res) => {
+async function handleGetRequest(req, res) {
   const { authorization } = req.headers;
   if (!authorization) {
     res.status(401).send('No authorization token');
@@ -22,4 +23,16 @@ export default async (req, res) => {
   } catch (error) {
     res.status(403).send('Invalid Token');
   }
+}
+
+async function handlePutRequest(req, res) {
+  const { userId, role } = req.body;
+  await User.findOneAndUpdate({ _id: userId }, { role });
+  res.status(203).send('User updated');
+}
+
+const handlerMap = { GET: handleGetRequest, PUT: handlePutRequest };
+
+export default async (req, res) => {
+  await handleRequest(handlerMap, req, res);
 };
