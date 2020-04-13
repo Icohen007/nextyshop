@@ -1,0 +1,66 @@
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import {
+  Checkbox, Header, Icon, Table,
+} from 'semantic-ui-react';
+import cookie from 'js-cookie';
+import baseUrl from '../../utils/baseUrl';
+
+const tableHeaders = ['', 'Name', 'Email', 'Joined', 'Updated', 'Role'];
+
+function AccountPermissions() {
+  const [users, setUsers] = useState([]);
+
+  async function getUsers() {
+    const url = `${baseUrl}/api/users`;
+    const token = cookie.get('token');
+    const payload = { headers: { Authorization: token } };
+    const response = await axios.get(url, payload);
+    setUsers(response.data);
+  }
+
+  useEffect(async () => {
+    await getUsers();
+  }, []);
+
+  return (
+    <div style={{ margin: '2em 0' }}>
+      <Header as="h2">
+        <Icon name="settings" />
+        User Permissions
+      </Header>
+      <Table compact celled definition>
+        <Table.Header>
+          <Table.Row>
+            {tableHeaders.map((header) => (header
+              ? (<Table.HeaderCell>{header}</Table.HeaderCell>)
+              : <Table.HeaderCell />))}
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {users.map((user) => (<UserPermissionRow key={user._id} user={user} />))}
+        </Table.Body>
+      </Table>
+    </div>
+  );
+}
+
+function UserPermissionRow({ user }) {
+  const {
+    createdAt, updatedAt, role, email, name,
+  } = user;
+  return (
+    <Table.Row>
+      <Table.Cell collapsing>
+        <Checkbox toggle />
+      </Table.Cell>
+      <Table.Cell>{name}</Table.Cell>
+      <Table.Cell>{email}</Table.Cell>
+      <Table.Cell>{createdAt}</Table.Cell>
+      <Table.Cell>{updatedAt}</Table.Cell>
+      <Table.Cell>{role}</Table.Cell>
+    </Table.Row>
+  );
+}
+
+export default AccountPermissions;
