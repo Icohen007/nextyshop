@@ -1,7 +1,6 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const connectionStatus = { isConnected: false };
-
 
 const mongooseDeprecatedConfig = {
   useCreateIndex: true,
@@ -20,4 +19,4 @@ async function dbConnection() {
   connectionStatus.isConnected = db.connections[0].readyState;
 }
 
-export default dbConnection;
+module.exports = dbConnection;
