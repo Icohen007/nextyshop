@@ -6,6 +6,10 @@ dbConnection();
 
 export default async (req, res) => {
   const { authorization } = req.headers;
+  if (!authorization) {
+    res.status(401).send('No authorization token');
+    return;
+  }
   try {
     const { userId } = jwt.verify(authorization, process.env.JWT_SECRET);
     const orders = await Order.find({ user: userId })
