@@ -6,6 +6,7 @@ import {
 import cookie from 'js-cookie';
 import baseUrl from '../../utils/baseUrl';
 import useDidMountEffect from '../../hooks/useDidMountEffect';
+import formatDate from '../../utils/formatDate';
 
 const tableHeaders = ['', 'Name', 'Email', 'Joined', 'Updated', 'Role'];
 
@@ -72,8 +73,8 @@ function UserPermissionRow({ user }) {
       </Table.Cell>
       <Table.Cell>{name}</Table.Cell>
       <Table.Cell>{email}</Table.Cell>
-      <Table.Cell>{createdAt}</Table.Cell>
-      <Table.Cell>{updatedAt}</Table.Cell>
+      <Table.Cell>{formatDate(createdAt)}</Table.Cell>
+      <Table.Cell>{formatDate(updatedAt)}</Table.Cell>
       <Table.Cell>{admin ? 'admin' : 'user'}</Table.Cell>
     </Table.Row>
   );

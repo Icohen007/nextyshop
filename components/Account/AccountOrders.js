@@ -2,6 +2,7 @@ import {
   Header, Accordion, Label, Segment, Icon, Button, List, Image, Container,
 } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
+import formatDate from '../../utils/formatDate';
 
 const OrderItem = ({ product, quantity }) => (
   <List.Item>
@@ -26,7 +27,7 @@ function mapOrdersToPanels(orders) {
   }) => ({
     key: _id,
     title: {
-      content: <Label color="blue" content={createdAt} />,
+      content: <Label color="blue" content={formatDate(createdAt)} />,
     },
     content: {
       content: (
