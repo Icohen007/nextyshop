@@ -21,7 +21,7 @@ function CartSummary({ products, handleCheckout, success }) {
         $
         {cartAmount}
         <StripeCheckout
-          name="NextShop"
+          name="Nexty"
           amount={stripeAmount}
           image={products.length ? products[0].product.mediaUrl : ''}
           currency="USD"

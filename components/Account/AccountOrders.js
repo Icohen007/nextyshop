@@ -44,7 +44,7 @@ function mapOrdersToPanels(orders) {
           </List.Header>
           <List>
             {products.map(({ product, quantity }) => (
-              <OrderItem product={product} quantity={quantity} />
+              <OrderItem key={product._id} product={product} quantity={quantity} />
             ))}
           </List>
         </Container>

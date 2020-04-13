@@ -20,7 +20,7 @@ function Header({ user }) {
               src="/static/logo.svg"
               style={{ marginRight: '1em' }}
             />
-            NextShop
+            Nexty
           </Menu.Item>
         </Link>
         <HeaderLink title="Cart" iconName="cart" linkTo="/cart" isActive={isActive} />

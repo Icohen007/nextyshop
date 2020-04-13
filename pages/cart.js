@@ -74,7 +74,6 @@ function Cart({ products, user }) {
     }
   }
 
-  console.log(products);
   return (
     <Segment loading={loading}>
       <CartItems

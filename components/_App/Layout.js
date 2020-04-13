@@ -16,7 +16,7 @@ function Layout({ children, user }) {
           rel="stylesheet"
           href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/semantic.min.css"
         />
-        <title>NextShop</title>
+        <title>Nexty</title>
       </Head>
       <RouterConfig>
         <Header user={user} />

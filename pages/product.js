@@ -4,7 +4,6 @@ import ProductActions from '../components/Product/ProductActions';
 import baseUrl from '../utils/baseUrl';
 
 function Product({ product, user }) {
-  console.log({ product });
   return (
     <>
       <ProductReview {...product} user={user} />
