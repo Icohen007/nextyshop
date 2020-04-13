@@ -1,7 +1,4 @@
 import Product from '../../models/Product';
-import dbConnection from '../../utils/dbConnection';
-
-dbConnection();
 
 async function getProductsOfGivenPage(pageSize, pageNumber) {
   const skips = pageSize * (pageNumber - 1);

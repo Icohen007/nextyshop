@@ -1,8 +1,5 @@
 import jwt from 'jsonwebtoken';
 import Order from '../../models/Order';
-import dbConnection from '../../utils/dbConnection';
-
-dbConnection();
 
 export default async (req, res) => {
   const { authorization } = req.headers;

@@ -1,10 +1,7 @@
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import Cart from '../../models/Cart';
-import dbConnection from '../../utils/dbConnection';
 import handleRequest from '../../utils/apiUtils';
-
-dbConnection();
 
 const { ObjectId } = mongoose.Types;
 

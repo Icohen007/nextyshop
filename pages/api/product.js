@@ -1,9 +1,6 @@
 import Product from '../../models/Product';
 import Cart from '../../models/Cart';
 import handleRequest from '../../utils/apiUtils';
-import dbConnection from '../../utils/dbConnection';
-
-dbConnection();
 
 async function handleGetRequest(req, res) {
   const { _id } = req.query;

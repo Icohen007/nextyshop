@@ -4,9 +4,6 @@ import isEmail from 'validator/lib/isEmail';
 import isLength from 'validator/lib/isLength';
 import User from '../../models/User';
 import Cart from '../../models/Cart';
-import dbConnection from '../../utils/dbConnection';
-
-dbConnection();
 
 async function generateFieldError(name, password, email) {
   let errorMessage = '';

@@ -1,9 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../../models/User';
-import dbConnection from '../../utils/dbConnection';
 import handleRequest from '../../utils/apiUtils';
-
-dbConnection();
 
 async function handleGetRequest(req, res) {
   const { authorization } = req.headers;
