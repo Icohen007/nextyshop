@@ -1,4 +1,5 @@
 import Product from '../../models/Product';
+import Cart from '../../models/Cart';
 import handleRequest from '../../utils/apiUtils';
 import dbConnection from '../../utils/dbConnection';
 
@@ -35,8 +36,14 @@ async function handlePostRequest(req, res) {
 
 async function handleDeleteRequest(req, res) {
   const { _id } = req.query;
-  await Product.findOneAndDelete({ _id });
-  res.status(204).json({});
+  try {
+    await Product.findOneAndDelete({ _id });
+    await Cart.updateMany({ 'products.product': _id }, { $pull: { products: { product: _id } } });
+    res.status(204).json({});
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Server Error in deleting product');
+  }
 }
 
 const handlerMap = { GET: handleGetRequest, DELETE: handleDeleteRequest, POST: handlePostRequest };
