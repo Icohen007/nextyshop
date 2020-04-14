@@ -9,7 +9,7 @@ function mapProductsToItems(products) {
     meta: `$${price}`,
     color: 'teal',
     fluid: true,
-    childKey: _id,
+    key: _id,
     href: `/product?_id=${_id}`,
   }));
 }
@@ -18,7 +18,7 @@ function ProductList({ products }) {
   return (
     <Card.Group
       stackable
-      itemsPerRow="3"
+      itemsPerRow="4"
       centered
       items={mapProductsToItems(products)}
     />

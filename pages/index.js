@@ -4,7 +4,7 @@ import ProductList from '../components/Index/ProductList';
 import baseUrl from '../utils/baseUrl';
 import ProductPagination from '../components/Index/ProductsPagination';
 
-const NUMBER_OF_PRODUCTS_PER_PAGE = 6;
+const NUMBER_OF_PRODUCTS_PER_PAGE = 8;
 
 const getProducts = async (ctx) => {
   const pageNumber = ctx.query.page || '1';

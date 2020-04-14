@@ -1,5 +1,5 @@
 import {
-    Header, Segment, Button, Icon, Item, Message,
+  Header, Segment, Button, Icon, Item, Message,
 } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
 
@@ -10,7 +10,7 @@ function CartItems({
 
   function mapCartProductsToItems(cartProducts) {
     return cartProducts.map(({ product, quantity }) => ({
-      childKey: product._id,
+      key: product._id,
       header: (
         <Item.Header as="a" onClick={() => router.push(`/product?_id=${product._id}`)}>
           {product.name}
