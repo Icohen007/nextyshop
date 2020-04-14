@@ -50,7 +50,7 @@ class MyApp extends App {
           destroyCookie(ctx, 'token');
           redirectUser(ctx, '/login');
         }
-        console.error('Error getting current user', error.message);
+        console.error('Error getting current user:', error.message);
       }
     }
 

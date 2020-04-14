@@ -21,8 +21,8 @@ function AccountPermissions() {
     setUsers(response.data);
   }
 
-  useEffect(async () => {
-    await getUsers();
+  useEffect(() => {
+    getUsers();
   }, []);
 
   return (
