@@ -1,16 +1,18 @@
-import jwt from 'jsonwebtoken';
+import nextConnect from 'next-connect';
 import User from '../../models/User';
+import authenticateAndAttachUser from './middlewares/authenticateAndAttachUser';
 
-export default async (req, res) => {
+const handler = nextConnect();
+handler.use(authenticateAndAttachUser());
+
+handler.get(async (req, res) => {
   try {
-    const { userId } = jwt.verify(
-      req.headers.authorization,
-      process.env.JWT_SECRET,
-    );
-    const users = await User.find({ _id: { $ne: userId } }).sort({ role: 'asc' });
+    const users = await User.find({ _id: { $ne: req.userId } }).sort({ role: 'asc' });
     res.status(200).json(users);
   } catch (error) {
     console.error(error);
-    res.status(403).send('Please login again');
+    res.status(500).send('Error getting users');
   }
-};
+});
+
+export default handler;

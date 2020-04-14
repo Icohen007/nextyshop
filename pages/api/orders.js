@@ -1,15 +1,13 @@
-import jwt from 'jsonwebtoken';
+import nextConnect from 'next-connect';
 import Order from '../../models/Order';
+import authenticateAndAttachUser from './middlewares/authenticateAndAttachUser';
 
-export default async (req, res) => {
-  const { authorization } = req.headers;
-  if (!authorization) {
-    res.status(401).send('No authorization token');
-    return;
-  }
+const handler = nextConnect();
+handler.use(authenticateAndAttachUser());
+
+handler.get(async (req, res) => {
   try {
-    const { userId } = jwt.verify(authorization, process.env.JWT_SECRET);
-    const orders = await Order.find({ user: userId })
+    const orders = await Order.find({ user: req.userId })
       .sort({ createdAt: 'desc' })
       .populate({
         path: 'products.product',
@@ -18,6 +16,8 @@ export default async (req, res) => {
     res.status(200).json({ orders });
   } catch (error) {
     console.error(error);
-    res.status(403).send('Please login again');
+    res.status(500).send('Error getting orders');
   }
-};
+});
+
+export default handler;

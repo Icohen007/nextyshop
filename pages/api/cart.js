@@ -1,7 +1,10 @@
-import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
+import nextConnect from 'next-connect';
+import authenticateAndAttachUser from './middlewares/authenticateAndAttachUser';
 import Cart from '../../models/Cart';
-import handleRequest from '../../utils/apiUtils';
+
+const handler = nextConnect();
+handler.use(authenticateAndAttachUser());
 
 const { ObjectId } = mongoose.Types;
 
@@ -26,56 +29,35 @@ async function updateCart(productId, userId, quantity) {
   );
 }
 
-async function handleGetRequest(req, res) {
-  const { authorization } = req.headers;
-  if (!authorization) {
-    res.status(401).send('No authorization token');
-    return;
-  }
+handler.get(async (req, res) => {
   try {
-    const { userId } = jwt.verify(authorization, process.env.JWT_SECRET);
-    const cart = await Cart
-      .findOne({ user: userId })
-      .populate({
-        path: 'products.product',
-        model: 'Product',
-      });
+    const cart = await Cart.findOne({ user: req.userId }).populate({
+      path: 'products.product',
+      model: 'Product',
+    });
     res.status(200).json(cart.products);
   } catch (error) {
     console.error(error);
-    res.status(403).send('Please login again');
+    res.status(500).send('Error getting Cart');
   }
-}
+});
 
-async function handlePutRequest(req, res) {
-  const { authorization } = req.headers;
-  if (!authorization) {
-    res.status(401).send('No authorization token');
-    return;
-  }
+handler.put(async (req, res) => {
   try {
-    const { userId } = jwt.verify(authorization, process.env.JWT_SECRET);
-
     const { quantity, productId } = req.body;
-    await updateCart(productId, userId, quantity);
+    await updateCart(productId, req.userId, quantity);
     res.status(200).send('Cart Updated');
   } catch (error) {
     console.error(error);
-    res.status(403).send('Please login again');
+    res.status(500).send('Error Cart change');
   }
-}
+});
 
-async function handleDeleteRequest(req, res) {
-  const { authorization } = req.headers;
-  if (!authorization) {
-    res.status(401).send('No authorization token');
-    return;
-  }
+handler.delete(async (req, res) => {
   try {
-    const { userId } = jwt.verify(authorization, process.env.JWT_SECRET);
     const { productId } = req.query;
     const cart = await Cart.findOneAndUpdate(
-      { user: userId },
+      { user: req.userId },
       { $pull: { products: { product: productId } } },
       { new: true },
     ).populate({
@@ -85,12 +67,8 @@ async function handleDeleteRequest(req, res) {
     res.status(200).json(cart.products);
   } catch (error) {
     console.error(error);
-    res.status(403).send('Please login again');
+    res.status(500).send('Error Cart delete product');
   }
-}
+});
 
-const handlerMap = { GET: handleGetRequest, PUT: handlePutRequest, DELETE: handleDeleteRequest };
-
-export default async (req, res) => {
-  await handleRequest(handlerMap, req, res);
-};
+export default handler;

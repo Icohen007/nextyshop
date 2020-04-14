@@ -1,9 +1,13 @@
 import Stripe from 'stripe';
 import uuidv4 from 'uuid/v4';
-import jwt from 'jsonwebtoken';
+import nextConnect from 'next-connect';
 import Cart from '../../models/Cart';
 import Order from '../../models/Order';
 import calculateCartTotal from '../../utils/calculateCartTotal';
+import authenticateAndAttachUser from './middlewares/authenticateAndAttachUser';
+
+const handler = nextConnect();
+handler.use(authenticateAndAttachUser());
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -20,12 +24,11 @@ async function getPrevCustomerOrCreate({ email, id }) {
 }
 
 
-export default async (req, res) => {
+handler.post(async (req, res) => {
   const { paymentData } = req.body;
-  const { authorization } = req.headers;
+  const { userId } = req;
 
   try {
-    const { userId } = jwt.verify(authorization, process.env.JWT_SECRET);
     const cart = await Cart.findOne({ user: userId }).populate({
       path: 'products.product',
       model: 'Product',
@@ -61,4 +64,6 @@ export default async (req, res) => {
     console.error(error);
     res.status(500).send('Error processing charge');
   }
-};
+});
+
+export default handler;
