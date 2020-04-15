@@ -4,13 +4,14 @@ import AccountHeader from '../components/Account/AccountHeader';
 import AccountOrders from '../components/Account/AccountOrders';
 import AccountPermissions from '../components/Account/AccountPermissions';
 import baseUrl from '../utils/baseUrl';
+import { roles } from '../utils/constants';
 
 function Account({ user, orders }) {
   return (
     <>
       <AccountHeader {...user} />
       <AccountOrders orders={orders} />
-      {user && user.role === 'root' && <AccountPermissions />}
+      {user && user.role === roles.ROOT && <AccountPermissions />}
     </>
   );
 }

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { roles } from '../utils/constants';
 
 const { String } = mongoose.Schema.Types;
 
@@ -7,7 +8,7 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, select: false },
   role: {
-    type: String, required: true, enum: ['user', 'admin', 'root'], default: 'user',
+    type: String, required: true, enum: [roles.USER, roles.ADMIN, roles.ROOT], default: roles.USER,
   },
 }, {
   timestamps: true,

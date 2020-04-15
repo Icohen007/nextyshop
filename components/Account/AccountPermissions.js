@@ -7,6 +7,7 @@ import cookie from 'js-cookie';
 import baseUrl from '../../utils/baseUrl';
 import useDidMountEffect from '../../hooks/useDidMountEffect';
 import formatDate from '../../utils/formatDate';
+import { roles } from '../../utils/constants';
 
 const tableHeaders = ['', 'Name', 'Email', 'Joined', 'Updated', 'Role'];
 
@@ -52,13 +53,13 @@ function UserPermissionRow({ user }) {
     _id, createdAt, updatedAt, role, email, name,
   } = user;
 
-  const [admin, setAdmin] = useState(role === 'admin');
+  const [admin, setAdmin] = useState(role === roles.ADMIN);
 
   const handleToggleChange = (event, { checked }) => { setAdmin(checked); };
 
   async function updatePermission() {
     const url = `${baseUrl}/api/account`;
-    const payload = { userId: _id, role: admin ? 'admin' : 'user' };
+    const payload = { userId: _id, role: admin ? roles.ADMIN : roles.USER };
     await axios.put(url, payload);
   }
 
@@ -75,7 +76,7 @@ function UserPermissionRow({ user }) {
       <Table.Cell>{email}</Table.Cell>
       <Table.Cell>{formatDate(createdAt)}</Table.Cell>
       <Table.Cell>{formatDate(updatedAt)}</Table.Cell>
-      <Table.Cell>{admin ? 'admin' : 'user'}</Table.Cell>
+      <Table.Cell>{admin ? roles.ADMIN : roles.USER}</Table.Cell>
     </Table.Row>
   );
 }

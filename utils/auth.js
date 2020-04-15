@@ -1,5 +1,6 @@
 import cookie from 'js-cookie';
 import Router from 'next/router';
+import { roles } from './constants';
 
 export function handleLogin(token) {
   cookie.set('token', token);
@@ -21,6 +22,6 @@ export function redirectUser(ctx, location) {
   }
 }
 
-export const isRoot = (user) => user && user.role === 'root';
-export const isAdmin = (user) => user && user.role === 'admin';
+export const isRoot = (user) => user && user.role === roles.ROOT;
+export const isAdmin = (user) => user && user.role === roles.ADMIN;
 export const isRootOrAdmin = (user) => isRoot(user) || isAdmin(user);
