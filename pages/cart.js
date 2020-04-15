@@ -1,50 +1,19 @@
 import { Segment } from 'semantic-ui-react';
 import { parseCookies } from 'nookies';
 import axios from 'axios';
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useState } from 'react';
 import cookie from 'js-cookie';
 import CartItems from '../components/Cart/CartItems';
 import CartSummary from '../components/Cart/CartSummary';
 import baseUrl from '../utils/baseUrl';
 import errorHandler from '../utils/errorHandler';
-
-const initialState = {
-  loading: false,
-  success: false,
-  error: '',
-};
-
-const ActionTypes = {
-  LOADING: 'LOADING',
-  SUCCESS: 'SUCCESS',
-  ERROR: 'ERROR',
-  RESET: 'RESET',
-};
-
-function reducer(state, action) {
-  switch (action.type) {
-    case ActionTypes.LOADING:
-      return { ...state, loading: true, error: '' };
-    case ActionTypes.SUCCESS:
-      return {
-        ...state, loading: false, success: true, error: '',
-      };
-    case ActionTypes.ERROR:
-      return {
-        ...state, loading: false, success: false, error: action.payload,
-      };
-    case ActionTypes.RESET:
-      return initialState;
-    default:
-      throw new Error();
-  }
-}
+import useFormState from '../hooks/useFormState';
 
 function Cart({ products, user }) {
   const [cartProducts, setCartProducts] = useState(products);
-  const [{ loading, success, error }, dispatch] = useReducer(reducer, initialState);
-
-  const displayError = (err) => dispatch({ type: ActionTypes.ERROR, payload: err });
+  const {
+    error, loading, setError, setLoading, setSuccess, success,
+  } = useFormState();
 
   useEffect(() => {
     if (error) {
@@ -62,15 +31,15 @@ function Cart({ products, user }) {
 
   async function handleCheckout(paymentData) {
     try {
-      dispatch({ type: ActionTypes.LOADING });
+      setLoading();
       const url = `${baseUrl}/api/checkout`;
       const token = cookie.get('token');
       const payload = { paymentData };
       const headers = { headers: { Authorization: token } };
       await axios.post(url, payload, headers);
-      dispatch({ type: ActionTypes.SUCCESS });
+      setSuccess();
     } catch (err) {
-      errorHandler(err, displayError);
+      errorHandler(err, setError);
     }
   }
 

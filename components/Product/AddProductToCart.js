@@ -1,62 +1,32 @@
 import { Input } from 'semantic-ui-react';
-import { useState, useReducer, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import cookie from 'js-cookie';
 import baseUrl from '../../utils/baseUrl';
 import errorHandler from '../../utils/errorHandler';
-
-const initialState = {
-  loading: false,
-  success: false,
-  error: '',
-};
-
-const ActionTypes = {
-  LOADING: 'LOADING',
-  SUCCESS: 'SUCCESS',
-  ERROR: 'ERROR',
-  RESET: 'RESET',
-};
-
-function reducer(state, action) {
-  switch (action.type) {
-    case ActionTypes.LOADING:
-      return { ...state, loading: true, error: '' };
-    case ActionTypes.SUCCESS:
-      return {
-        ...state, loading: false, success: true, error: '',
-      };
-    case ActionTypes.ERROR:
-      return {
-        ...state, loading: false, success: false, error: action.payload,
-      };
-    case ActionTypes.RESET:
-      return initialState;
-    default:
-      throw new Error();
-  }
-}
+import useFormState from '../../hooks/useFormState';
 
 function AddProductToCart({ user, productId }) {
   const [quantity, setQuantity] = useState(1);
-  const [{ loading, success, error }, dispatch] = useReducer(reducer, initialState);
+  const {
+    error, loading, setError, setLoading, setSuccess, success, setReset,
+  } = useFormState();
   const router = useRouter();
 
   const handleQuantityChange = (event) => setQuantity(+event.target.value);
-  const displayError = (err) => dispatch({ type: ActionTypes.ERROR, payload: err });
 
   async function handleAddProductToCart() {
     try {
-      dispatch({ type: ActionTypes.LOADING });
+      setLoading();
       const url = `${baseUrl}/api/cart`;
       const payload = { quantity, productId };
       const token = cookie.get('token');
       const headers = { headers: { Authorization: token } };
       await axios.put(url, payload, headers);
-      dispatch({ type: ActionTypes.SUCCESS });
+      setSuccess();
     } catch (err) {
-      errorHandler(err, displayError);
+      errorHandler(err, setError);
     }
   }
 
@@ -99,7 +69,7 @@ function AddProductToCart({ user, productId }) {
   useEffect(() => {
     let timeoutId;
     if (success) {
-      timeoutId = setTimeout(() => { dispatch({ type: ActionTypes.RESET }); }, 3000);
+      timeoutId = setTimeout(() => { setReset(); }, 3000);
     }
     return () => {
       clearTimeout(timeoutId);

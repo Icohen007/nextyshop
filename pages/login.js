@@ -7,20 +7,16 @@ import axios from 'axios';
 import errorHandler from '../utils/errorHandler';
 import baseUrl from '../utils/baseUrl';
 import { handleLogin } from '../utils/auth';
-
+import useFormState from '../hooks/useFormState';
 
 const initialState = {
   email: '',
   password: '',
-  loading: false,
-  error: '',
 };
 
 const ActionTypes = {
   CHANGE_EMAIL: 'CHANGE_EMAIL',
   CHANGE_PASSWORD: 'CHANGE_PASSWORD',
-  LOADING: 'LOADING',
-  ERROR: 'ERROR',
 };
 
 function reducer(state, action) {
@@ -29,20 +25,17 @@ function reducer(state, action) {
       return { ...state, email: action.payload };
     case ActionTypes.CHANGE_PASSWORD:
       return { ...state, password: action.payload };
-    case ActionTypes.LOADING:
-      return { ...state, loading: true, error: '' };
-    case ActionTypes.ERROR:
-      return { ...state, loading: false, error: action.payload };
     default:
       throw new Error();
   }
 }
 
 function Login() {
-  const [{
-    email, password, loading, error,
-  }, dispatch] = useReducer(reducer, initialState);
+  const [{ email, password }, dispatch] = useReducer(reducer, initialState);
   const [disabled, setDisabled] = React.useState(true);
+  const {
+    error, loading, setError, setLoading,
+  } = useFormState();
 
   useEffect(() => {
     const requiredFields = [email, password];
@@ -55,20 +48,16 @@ function Login() {
     dispatch({ type: `CHANGE_${eventName.toUpperCase()}`, payload: value });
   };
 
-  const displayError = (err) => {
-    dispatch({ type: ActionTypes.ERROR, payload: err });
-  };
-
   async function handleSubmit(event) {
     event.preventDefault();
-    dispatch({ type: ActionTypes.LOADING });
+    setLoading();
     const loginUser = { email, password };
     try {
       const url = `${baseUrl}/api/login`;
       const response = await axios.post(url, loginUser);
       handleLogin(response.data);
     } catch (err) {
-      errorHandler(err, displayError);
+      errorHandler(err, setError);
     }
   }
 

@@ -6,15 +6,13 @@ import axios from 'axios';
 
 import baseUrl from '../utils/baseUrl';
 import errorHandler from '../utils/errorHandler';
+import useFormState from '../hooks/useFormState';
 
 const initialState = {
   name: '',
   price: '',
   media: '',
   description: '',
-  error: '',
-  success: false,
-  loading: false,
 };
 
 const ActionTypes = {
@@ -22,9 +20,6 @@ const ActionTypes = {
   CHANGE_PRICE: 'CHANGE_PRICE',
   CHANGE_MEDIA: 'CHANGE_MEDIA',
   CHANGE_DESCRIPTION: 'CHANGE_DESCRIPTION',
-  SUCCESS: 'SUCCESS',
-  LOADING: 'LOADING',
-  ERROR: 'ERROR',
 };
 
 function reducer(state, action) {
@@ -37,12 +32,6 @@ function reducer(state, action) {
       return { ...state, media: action.payload };
     case ActionTypes.CHANGE_DESCRIPTION:
       return { ...state, description: action.payload };
-    case ActionTypes.SUCCESS:
-      return { ...initialState, success: true };
-    case ActionTypes.LOADING:
-      return { ...state, loading: true, error: '' };
-    case ActionTypes.ERROR:
-      return { ...state, loading: false, error: action.payload };
     default:
       throw new Error();
   }
@@ -52,10 +41,13 @@ let inputTarget = null;
 
 function CreateProduct() {
   const [{
-    name, price, media, description, error, success, loading,
+    name, price, media, description,
   }, dispatch] = useReducer(reducer, initialState);
   const [mediaPreview, setMediaPreview] = useState('');
   const [disabled, setDisabled] = useState(true);
+  const {
+    error, loading, setError, setLoading, setReset, setSuccess, success,
+  } = useFormState();
 
   useEffect(() => {
     const requiredFields = [name, price, media, description];
@@ -85,13 +77,9 @@ function CreateProduct() {
     return response.data.url;
   }
 
-  const displayError = (err) => {
-    dispatch({ type: ActionTypes.ERROR, payload: err });
-  };
-
   async function handleSubmit(event) {
     event.preventDefault();
-    dispatch({ type: ActionTypes.LOADING });
+    setLoading();
     try {
       const mediaUrl = await handleImageUpload();
       const newProduct = {
@@ -99,11 +87,12 @@ function CreateProduct() {
       };
       const url = `${baseUrl}/api/product`;
       await axios.post(url, newProduct);
-      dispatch({ type: ActionTypes.SUCCESS });
+      setReset();
+      setSuccess();
       setMediaPreview('');
       inputTarget.value = null;
     } catch (err) {
-      errorHandler(err, displayError);
+      errorHandler(err, setError);
     }
   }
 

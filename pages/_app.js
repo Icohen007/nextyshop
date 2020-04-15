@@ -38,7 +38,7 @@ class MyApp extends App {
       }
     } else {
       try {
-        const user = await this.fetchUserByToken(token);
+        const user = await this.fetchCurrentUserByToken(token);
         pageProps.user = user;
         const isNotPermitted = !isRootOrAdmin(user) && ctx.pathname === '/create';
         if (isNotPermitted) {
@@ -57,7 +57,7 @@ class MyApp extends App {
     return { pageProps };
   }
 
-  static async fetchUserByToken(token) {
+  static async fetchCurrentUserByToken(token) {
     const payload = { headers: { Authorization: token } };
     const url = `${baseUrl}/api/account`;
     const response = await axios.get(url, payload);

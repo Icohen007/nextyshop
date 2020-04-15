@@ -6,14 +6,6 @@ import ProductPagination from '../components/Index/ProductsPagination';
 
 const NUMBER_OF_PRODUCTS_PER_PAGE = 8;
 
-const getProducts = async (ctx) => {
-  const pageNumber = ctx.query.page || '1';
-  const url = `${baseUrl}/api/products`;
-  const payload = { params: { page: pageNumber, size: NUMBER_OF_PRODUCTS_PER_PAGE } };
-  const response = await axios.get(url, payload);
-  return response.data;
-};
-
 function Home({ products, totalPages }) {
   return (
     <>
@@ -23,6 +15,12 @@ function Home({ products, totalPages }) {
   );
 }
 
-Home.getInitialProps = getProducts;
+Home.getInitialProps = async (ctx) => {
+  const pageNumber = ctx.query.page || '1';
+  const url = `${baseUrl}/api/products`;
+  const payload = { params: { page: pageNumber, size: NUMBER_OF_PRODUCTS_PER_PAGE } };
+  const response = await axios.get(url, payload);
+  return response.data;
+};
 
 export default Home;

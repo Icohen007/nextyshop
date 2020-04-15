@@ -9,10 +9,10 @@ import useDidMountEffect from '../../hooks/useDidMountEffect';
 import formatDate from '../../utils/formatDate';
 import { roles } from '../../utils/constants';
 
-const tableHeaders = ['', 'Name', 'Email', 'Joined', 'Updated', 'Role'];
 
 function AccountPermissions() {
   const [users, setUsers] = useState([]);
+  const tableHeaders = ['', 'Name', 'Email', 'Joined', 'Updated', 'Role'];
 
   async function getUsers() {
     const url = `${baseUrl}/api/users`;
