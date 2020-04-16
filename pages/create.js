@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import {
-  Button, Form, Header, Icon, Image, Input, Message, TextArea,
+  Button, Form, Header, Icon, Image, Input, Message, TextArea, Segment,
 } from 'semantic-ui-react';
 import axios from 'axios';
 
@@ -98,67 +98,69 @@ function CreateProduct() {
 
   return (
     <>
-      <Header as="h2" block>
+      <Header as="h2" block textAlign="center">
         <Icon name="add" color="orange" />
         Create New Product
       </Header>
-      <Form loading={loading} error={Boolean(error)} success={success} onSubmit={handleSubmit}>
-        <Message error header="Oops!" content={error} />
+      <Segment secondary raised style={{ position: 'absolute' }}>
+        <Form loading={loading} error={Boolean(error)} success={success} onSubmit={handleSubmit}>
+          <Message error header="Oops!" content={error} />
 
-        <Message
-          success
-          icon="check"
-          header="Success!"
-          content="Your product has been posted"
-        />
-        <Form.Group widths="equal">
+          <Message
+            success
+            icon="check"
+            header="Success!"
+            content="Your product has been posted"
+          />
+          <Form.Group widths="equal">
+            <Form.Field
+              control={Input}
+              name="name"
+              label="Name"
+              placeholder="Name"
+              value={name}
+              onChange={handleChange}
+            />
+            <Form.Field
+              control={Input}
+              name="price"
+              label="Price"
+              placeholder="Price"
+              min="0.00"
+              step="0.01"
+              type="number"
+              value={price}
+              onChange={handleChange}
+            />
+            <Form.Field
+              control={Input}
+              name="media"
+              type="file"
+              label="Media"
+              accept="image/*"
+              content="Select Image"
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Image src={mediaPreview} rounded centered size="small" />
           <Form.Field
-            control={Input}
-            name="name"
-            label="Name"
-            placeholder="Name"
-            value={name}
+            control={TextArea}
+            name="description"
+            label="Description"
+            placeholder="Description"
             onChange={handleChange}
+            value={description}
           />
           <Form.Field
-            control={Input}
-            name="price"
-            label="Price"
-            placeholder="Price"
-            min="0.00"
-            step="0.01"
-            type="number"
-            value={price}
-            onChange={handleChange}
+            control={Button}
+            disabled={disabled || loading}
+            color="blue"
+            icon="pencil alternate"
+            content="Submit"
+            type="submit"
           />
-          <Form.Field
-            control={Input}
-            name="media"
-            type="file"
-            label="Media"
-            accept="image/*"
-            content="Select Image"
-            onChange={handleChange}
-          />
-        </Form.Group>
-        <Image src={mediaPreview} rounded centered size="small" />
-        <Form.Field
-          control={TextArea}
-          name="description"
-          label="Description"
-          placeholder="Description"
-          onChange={handleChange}
-          value={description}
-        />
-        <Form.Field
-          control={Button}
-          disabled={disabled || loading}
-          color="blue"
-          icon="pencil alternate"
-          content="Submit"
-          type="submit"
-        />
-      </Form>
+        </Form>
+      </Segment>
     </>
   );
 }

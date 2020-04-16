@@ -7,7 +7,7 @@ function AccountHeader({
   role, email, name, createdAt,
 }) {
   return (
-    <Segment secondary inverted color="violet">
+    <Segment secondary className="account__segment">
       <Label
         color="teal"
         size="large"
@@ -16,7 +16,7 @@ function AccountHeader({
         style={{ textTransform: 'capitalize' }}
         content={role}
       />
-      <Header inverted textAlign="center" as="h1" icon>
+      <Header textAlign="center" as="h1" icon>
         <Icon name="user" />
         {name}
         <Header.Subheader>{email}</Header.Subheader>
