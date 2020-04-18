@@ -20,6 +20,7 @@ const ActionTypes = {
   CHANGE_PRICE: 'CHANGE_PRICE',
   CHANGE_MEDIA: 'CHANGE_MEDIA',
   CHANGE_DESCRIPTION: 'CHANGE_DESCRIPTION',
+  CLEAR: 'CLEAR',
 };
 
 function reducer(state, action) {
@@ -32,6 +33,8 @@ function reducer(state, action) {
       return { ...state, media: action.payload };
     case ActionTypes.CHANGE_DESCRIPTION:
       return { ...state, description: action.payload };
+    case ActionTypes.CLEAR:
+      return initialState;
     default:
       throw new Error();
   }
@@ -89,6 +92,7 @@ function CreateProduct() {
       await axios.post(url, newProduct);
       setReset();
       setSuccess();
+      dispatch({ type: ActionTypes.CLEAR });
       setMediaPreview('');
       inputTarget.value = null;
     } catch (err) {

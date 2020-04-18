@@ -11,7 +11,7 @@ function Header({ user }) {
   const isActive = useContext(IsActiveContext);
 
   return (
-    <Menu stackable fluid color="teal" inverted>
+    <Menu stackable fluid inverted>
       <Container text>
         <Link href="/">
           <Menu.Item header>
@@ -20,7 +20,11 @@ function Header({ user }) {
               src="/static/logo.svg"
               style={{ marginRight: '1em' }}
             />
-            Nexty
+            <span style={{ color: '#4444ff' }}>N</span>
+            <span style={{ color: '#ca11ca', marginLeft: '0.1em' }}>E</span>
+            <span style={{ color: 'orange', marginLeft: '0.1em' }}>X</span>
+            <span style={{ color: '#91c555', marginLeft: '0.1em' }}>T</span>
+            <span style={{ color: '#742af9', marginLeft: '0.1em' }}>Y</span>
           </Menu.Item>
         </Link>
         <HeaderLink title="Cart" iconName="cart" linkTo="/cart" isActive={isActive} />
