@@ -13,6 +13,14 @@ body {
   padding-bottom: 2rem;
 }
 
+@media screen and (max-width: 768px) {
+  .ui.four.cards > .card {
+    width: calc(50% - 1.5em) !important;
+    margin-left: .75em !important;
+    margin-right: .75em !important;
+  }
+}
+
 .ui.menu.fluid.inverted {
   background-color: #6692bf !important;
   background-image: linear-gradient(62deg, #6590be 0%, #a68fbe 100%) !important;

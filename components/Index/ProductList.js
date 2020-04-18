@@ -1,4 +1,4 @@
-import { Card, Responsive } from 'semantic-ui-react';
+import { Card } from 'semantic-ui-react';
 
 function mapProductsToItems(products) {
   return products.map(({
@@ -16,24 +16,12 @@ function mapProductsToItems(products) {
 
 function ProductList({ products }) {
   const items = mapProductsToItems(products);
-
   return (
-    <>
-      <Responsive minWidth={768}>
-        <Card.Group
-          itemsPerRow="4"
-          centered
-          items={items}
-        />
-      </Responsive>
-      <Responsive maxWidth={768}>
-        <Card.Group
-          itemsPerRow="2"
-          centered
-          items={items}
-        />
-      </Responsive>
-    </>
+    <Card.Group
+      itemsPerRow={4}
+      centered
+      items={items}
+    />
   );
 }
 
