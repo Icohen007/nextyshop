@@ -9,6 +9,10 @@ body {
   background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%) !important;
 }
 
+#__next {
+  padding-bottom: 2rem;
+}
+
 .ui.menu.fluid.inverted {
   background-color: #6692bf !important;
   background-image: linear-gradient(62deg, #6590be 0%, #a68fbe 100%) !important;

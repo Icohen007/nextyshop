@@ -106,7 +106,7 @@ function CreateProduct() {
         <Icon name="add" color="orange" />
         Create New Product
       </Header>
-      <Segment secondary raised style={{ position: 'absolute' }}>
+      <Segment secondary raised>
         <Form loading={loading} error={Boolean(error)} success={success} onSubmit={handleSubmit}>
           <Message error header="Oops!" content={error} />
 
@@ -144,6 +144,7 @@ function CreateProduct() {
               accept="image/*"
               content="Select Image"
               onChange={handleChange}
+              style={{ maxWidth: '92%' }}
             />
           </Form.Group>
           <Image src={mediaPreview} rounded centered size="small" />
