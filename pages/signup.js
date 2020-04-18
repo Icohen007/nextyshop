@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import {
-  Button, Form, Icon, Message, Segment,
+  Button, Container, Form, Icon, Message, Segment,
 } from 'semantic-ui-react';
 import Link from 'next/link';
 import axios from 'axios';
@@ -66,7 +66,7 @@ function Signup() {
   }
 
   return (
-    <>
+    <Container text>
       <Message
         attached
         icon="settings"
@@ -128,7 +128,7 @@ function Signup() {
         {' '}
         instead.
       </Message>
-    </>
+    </Container>
   );
 }
 

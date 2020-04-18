@@ -1,14 +1,15 @@
 import axios from 'axios';
+import { Container } from 'semantic-ui-react';
 import ProductReview from '../components/Product/ProductReview';
 import ProductActions from '../components/Product/ProductActions';
 import baseUrl from '../utils/baseUrl';
 
 function Product({ product, user }) {
   return (
-    <>
+    <Container>
       <ProductReview {...product} user={user} />
       <ProductActions {...product} user={user} />
-    </>
+    </Container>
   );
 }
 

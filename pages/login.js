@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import {
-  Button, Form, Icon, Message, Segment,
+  Button, Container, Form, Icon, Message, Segment,
 } from 'semantic-ui-react';
 import Link from 'next/link';
 import axios from 'axios';
@@ -62,7 +62,7 @@ function Login() {
   }
 
   return (
-    <>
+    <Container text>
       <Message
         attached
         icon="privacy"
@@ -114,7 +114,7 @@ function Login() {
         {' '}
         instead.
       </Message>
-    </>
+    </Container>
   );
 }
 

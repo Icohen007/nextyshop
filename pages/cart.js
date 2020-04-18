@@ -1,4 +1,4 @@
-import { Segment } from 'semantic-ui-react';
+import { Container, Segment } from 'semantic-ui-react';
 import { parseCookies } from 'nookies';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -44,19 +44,21 @@ function Cart({ products, user }) {
   }
 
   return (
-    <Segment loading={loading}>
-      <CartItems
-        handleRemoveFromCart={handleRemoveFromCart}
-        products={cartProducts}
-        user={user}
-        success={success}
-      />
-      <CartSummary
-        products={cartProducts}
-        handleCheckout={handleCheckout}
-        success={success}
-      />
-    </Segment>
+    <Container text>
+      <Segment loading={loading}>
+        <CartItems
+          handleRemoveFromCart={handleRemoveFromCart}
+          products={cartProducts}
+          user={user}
+          success={success}
+        />
+        <CartSummary
+          products={cartProducts}
+          handleCheckout={handleCheckout}
+          success={success}
+        />
+      </Segment>
+    </Container>
   );
 }
 

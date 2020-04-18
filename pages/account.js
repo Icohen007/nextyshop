@@ -1,5 +1,6 @@
 import { parseCookies } from 'nookies';
 import axios from 'axios';
+import { Container } from 'semantic-ui-react';
 import AccountHeader from '../components/Account/AccountHeader';
 import AccountOrders from '../components/Account/AccountOrders';
 import AccountPermissions from '../components/Account/AccountPermissions';
@@ -8,11 +9,11 @@ import { roles } from '../utils/constants';
 
 function Account({ user, orders }) {
   return (
-    <>
+    <Container text>
       <AccountHeader {...user} />
       <AccountOrders orders={orders} />
       {user && user.role === roles.ROOT && <AccountPermissions />}
-    </>
+    </Container>
   );
 }
 

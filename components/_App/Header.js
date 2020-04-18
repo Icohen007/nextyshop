@@ -11,7 +11,7 @@ function Header({ user }) {
   const isActive = useContext(IsActiveContext);
 
   return (
-    <Menu stackable fluid inverted>
+    <Menu stackable fluid inverted style={{ marginBottom: '1.5em' }}>
       <Container text>
         <Link href="/">
           <Menu.Item header>

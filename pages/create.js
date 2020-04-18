@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import {
-  Button, Form, Header, Icon, Image, Input, Message, TextArea, Segment,
+  Button, Form, Header, Icon, Image, Input, Message, TextArea, Segment, Container,
 } from 'semantic-ui-react';
 import axios from 'axios';
 
@@ -101,7 +101,7 @@ function CreateProduct() {
   }
 
   return (
-    <>
+    <Container text>
       <Header as="h2" block textAlign="center">
         <Icon name="add" color="orange" />
         Create New Product
@@ -165,7 +165,7 @@ function CreateProduct() {
           />
         </Form>
       </Segment>
-    </>
+    </Container>
   );
 }
 
