@@ -43,7 +43,7 @@ function CartItems({
 
   if (!products.length) {
     return (
-      <Segment secondary color="violet" inverted textAlign="center" placeholder>
+      <Segment inverted textAlign="center" placeholder className="cart-items">
         <Header icon>
           <Icon name="shopping basket" />
           No products in your cart. Add some!

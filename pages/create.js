@@ -102,7 +102,7 @@ function CreateProduct() {
 
   return (
     <Container text>
-      <Header as="h2" block textAlign="center">
+      <Header as="h2" textAlign="center">
         <Icon name="add" color="orange" />
         Create New Product
       </Header>

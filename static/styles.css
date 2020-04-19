@@ -49,4 +49,6 @@ background-color: rgba(34, 36, 38, .3);
 div.ui.segment {
   background: rgba(255, 255, 255, 0.47);
 }
-
+.ui.inverted.segment.cart-items {
+  background: linear-gradient(100deg, #214d71, #0883bfe0);
+}
