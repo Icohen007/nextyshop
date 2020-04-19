@@ -11,6 +11,8 @@ body {
 
 #__next {
   padding-bottom: 2rem;
+  background-color: #8EC5FC !important;
+  background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%) !important;
 }
 
 @media screen and (max-width: 768px) {
