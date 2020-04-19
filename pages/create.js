@@ -106,7 +106,7 @@ function CreateProduct() {
         <Icon name="add" color="orange" />
         Create New Product
       </Header>
-      <Segment secondary raised>
+      <Segment raised>
         <Form loading={loading} error={Boolean(error)} success={success} onSubmit={handleSubmit}>
           <Message error header="Oops!" content={error} />
 

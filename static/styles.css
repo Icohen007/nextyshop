@@ -39,4 +39,14 @@ body {
   background-image: linear-gradient(19deg, #FAACA8 0%, #DDD6F3 100%);
 }
 
+.ui.pagination.menu {
+  font-size: 1.2rem;
+}
+.ui.pagination.menu a:before {
+background-color: rgba(34, 36, 38, .3);
+}
+
+div.ui.segment {
+  background: rgba(255, 255, 255, 0.47);
+}
 

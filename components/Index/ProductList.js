@@ -7,7 +7,7 @@ function mapProductsToItems(products) {
     header: name,
     image: mediaUrl,
     meta: `$${price}`,
-    color: 'teal',
+    color: 'black',
     fluid: true,
     key: _id,
     href: `/product?_id=${_id}`,
